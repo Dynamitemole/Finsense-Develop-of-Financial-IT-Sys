@@ -1,0 +1,101 @@
+date,amount,currency,merchant,description,category,country,city,channel,is_flagged,date_dt,month
+2025/1/1,3525,HUF,Netflix,Netflix monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/1/1,Jan-25
+2025/1/2,9.72,EUR,Adobe,Adobe monthly subscription auto-renewal,Education,HU,Budapest,Card,FALSE,2025/1/2,Jan-25
+2025/1/3,22342,HUF,WizzAir,WizzAir travel purchase,Travel,CZ,Budapest,Card,FALSE,2025/1/3,Jan-25
+2025/1/4,1911,HUF,Spotify,Spotify monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/1/4,Jan-25
+2025/1/5,3877,HUF,Steam,Steam entertainment purchase,Entertainment,PL,Budapest,POS,FALSE,2025/1/5,Jan-25
+2025/1/8,4878,HUF,BKK,BKK transport purchase,Transport,HU,Budapest,Card,FALSE,2025/1/8,Jan-25
+2025/1/11,5341,HUF,MOL Bubi,MOL Bubi transport purchase,Transport,HU,Budapest,Online,FALSE,2025/1/11,Jan-25
+2025/1/11,10624,HUF,Aldi,Aldi food purchase,Food,CZ,Budapest,POS,FALSE,2025/1/11,Jan-25
+2025/1/13,16449,HUF,DM Pharmacy,DM Pharmacy health purchase,Health,RO,Budapest,POS,FALSE,2025/1/13,Jan-25
+2025/1/13,6328,HUF,Cinema City,Cinema City entertainment purchase,Entertainment,HU,Budapest,Card,FALSE,2025/1/13,Jan-25
+2025/1/20,2624,HUF,Taxi 6x6,Taxi 6x6 transport purchase,Transport,HU,Budapest,POS,FALSE,2025/1/20,Jan-25
+2025/1/22,5466,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,AT,Budapest,POS,FALSE,2025/1/22,Jan-25
+2025/1/23,5.56,EUR,Bolt,Bolt transport purchase,Transport,SK,Budapest,Online,FALSE,2025/1/23,Jan-25
+2025/1/25,52530,HUF,Zara,Zara shopping purchase,Shopping,CZ,Budapest,Card,FALSE,2025/1/25,Jan-25
+2025/1/27,25903,HUF,Benu,Benu health purchase,Health,DE,Budapest,Online,FALSE,2025/1/27,Jan-25
+2025/1/27,19175,HUF,Cinema City,Cinema City entertainment purchase,Entertainment,AT,Budapest,Card,FALSE,2025/1/27,Jan-25
+2025/1/27,20391,HUF,Vodafone,Vodafone utilities purchase,Utilities,DE,Budapest,POS,FALSE,2025/1/27,Jan-25
+2025/1/28,20.09,EUR,Wolt,Wolt food purchase,Food,DE,Budapest,POS,FALSE,2025/1/28,Jan-25
+2025/1/29,53855,HUF,Vodafone,Vodafone utilities purchase,Utilities,DE,Budapest,Card,FALSE,2025/1/29,Jan-25
+2025/1/30,16267,HUF,Coursera,Coursera education purchase,Education,RO,Budapest,POS,FALSE,2025/1/30,Jan-25
+2025/1/31,49389,HUF,MVM Next,MVM Next utilities purchase,Utilities,DE,Budapest,Card,FALSE,2025/1/31,Jan-25
+2025/1/31,3480,HUF,Netflix,Netflix monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/1/31,Jan-25
+2025/2/1,57496,HUF,WizzAir,WizzAir travel purchase,Travel,DE,Budapest,Online,FALSE,2025/2/1,Feb-25
+2025/2/1,1872,HUF,Spotify,Spotify monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/2/1,Feb-25
+2025/2/2,9.57,EUR,Adobe,Adobe monthly subscription auto-renewal,Education,HU,Budapest,Card,FALSE,2025/2/2,Feb-25
+2025/2/5,16448,HUF,MVM Next,MVM Next utilities purchase,Utilities,CZ,Budapest,POS,FALSE,2025/2/5,Feb-25
+2025/2/6,166.19,EUR,MVM Next,MVM Next utilities purchase,Utilities,HU,Budapest,Card,FALSE,2025/2/6,Feb-25
+2025/2/6,23997,HUF,DM Pharmacy,DM Pharmacy health purchase,Health,RO,Budapest,POS,FALSE,2025/2/6,Feb-25
+2025/2/7,12353,HUF,Udemy,Udemy education purchase,Education,PL,Budapest,Online,FALSE,2025/2/7,Feb-25
+2025/2/8,536931,HUF,Rossmann,Rossmann shopping purchase,Shopping,PL,Budapest,Online,TRUE,2025/2/8,Feb-25
+2025/2/8,9331,HUF,Udemy,Udemy education purchase,Education,SK,Budapest,Card,FALSE,2025/2/8,Feb-25
+2025/2/8,35742,HUF,Ryanair,Ryanair travel purchase,Travel,PL,Budapest,POS,FALSE,2025/2/8,Feb-25
+2025/2/10,5941,HUF,Wolt,Wolt food purchase,Food,CZ,Budapest,Card,FALSE,2025/2/10,Feb-25
+2025/2/10,40182,HUF,E.ON,E.ON utilities purchase,Utilities,HU,Budapest,POS,FALSE,2025/2/10,Feb-25
+2025/2/12,1644,HUF,KFC,KFC food purchase,Food,SK,Budapest,Online,FALSE,2025/2/12,Feb-25
+2025/2/13,7760,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,DE,Budapest,POS,FALSE,2025/2/13,Feb-25
+2025/2/17,12483,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,CZ,Budapest,Card,FALSE,2025/2/17,Feb-25
+2025/2/17,3164,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,SK,Budapest,Online,FALSE,2025/2/17,Feb-25
+2025/2/20,41.96,EUR,WizzAir,WizzAir travel purchase,Travel,HU,Budapest,Online,FALSE,2025/2/20,Feb-25
+2025/2/21,19.25,EUR,Bolt,Bolt transport purchase,Transport,PL,Budapest,Card,FALSE,2025/2/21,Feb-25
+2025/2/23,22958,HUF,Benu,Benu health purchase,Health,CZ,Budapest,Card,FALSE,2025/2/23,Feb-25
+2025/2/24,18135,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,CZ,Budapest,POS,FALSE,2025/2/24,Feb-25
+2025/2/25,48958,HUF,Vodafone,Vodafone utilities purchase,Utilities,PL,Budapest,Card,FALSE,2025/2/25,Feb-25
+2025/2/27,1519,HUF,McDonalds,McDonalds food purchase,Food,AT,Budapest,Online,FALSE,2025/2/27,Feb-25
+2025/2/28,12996,HUF,Udemy,Udemy education purchase,Education,CZ,Budapest,Card,FALSE,2025/2/28,Feb-25
+2025/2/28,46873,HUF,MediaMarkt,MediaMarkt shopping purchase,Shopping,RO,Budapest,Card,FALSE,2025/2/28,Feb-25
+2025/3/1,3535,HUF,Netflix,Netflix monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/3/1,Mar-25
+2025/3/1,1872,HUF,Spotify,Spotify monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/3/1,Mar-25
+2025/3/3,10.43,EUR,Adobe,Adobe monthly subscription auto-renewal,Education,HU,Budapest,Card,FALSE,2025/3/3,Mar-25
+2025/3/4,7219,HUF,DM Pharmacy,DM Pharmacy health purchase,Health,CZ,Budapest,Online,FALSE,2025/3/4,Mar-25
+2025/3/5,5884,HUF,Taxi 6x6,Taxi 6x6 transport purchase,Transport,SK,Budapest,Online,FALSE,2025/3/5,Mar-25
+2025/3/6,108.88,EUR,Coursera,Coursera education purchase,Education,DE,Budapest,POS,FALSE,2025/3/6,Mar-25
+2025/3/8,8.35,EUR,Spar,Spar food purchase,Food,RO,Budapest,Online,FALSE,2025/3/8,Mar-25
+2025/3/9,28938,HUF,Vodafone,Vodafone utilities purchase,Utilities,SK,Budapest,POS,FALSE,2025/3/9,Mar-25
+2025/3/9,4689,HUF,Decathlon,Decathlon shopping purchase,Shopping,HU,Budapest,Online,FALSE,2025/3/9,Mar-25
+2025/3/11,35308,HUF,Coursera,Coursera education purchase,Education,CZ,Budapest,Card,FALSE,2025/3/11,Mar-25
+2025/3/12,47417,HUF,MVM Next,MVM Next utilities purchase,Utilities,SK,Budapest,Card,FALSE,2025/3/12,Mar-25
+2025/3/14,3467,HUF,DM Pharmacy,DM Pharmacy health purchase,Health,CZ,Budapest,Card,FALSE,2025/3/14,Mar-25
+2025/3/15,130.36,EUR,Udemy,Udemy education purchase,Education,AT,Budapest,Card,FALSE,2025/3/15,Mar-25
+2025/3/17,10252,HUF,Foodpanda,Foodpanda food purchase,Food,PL,Budapest,Card,FALSE,2025/3/17,Mar-25
+2025/3/18,17544,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,PL,Budapest,POS,FALSE,2025/3/18,Mar-25
+2025/3/20,10698,HUF,E.ON,E.ON utilities purchase,Utilities,PL,Budapest,POS,FALSE,2025/3/20,Mar-25
+2025/3/20,8017,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,AT,Budapest,Card,FALSE,2025/3/20,Mar-25
+2025/3/21,21210,HUF,H&M,H&M shopping purchase,Shopping,DE,Budapest,Online,FALSE,2025/3/21,Mar-25
+2025/3/28,55168,HUF,Telekom,Telekom utilities purchase,Utilities,SK,Budapest,Card,FALSE,2025/3/28,Mar-25
+2025/3/30,3596,HUF,Netflix,Netflix monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/3/30,Mar-25
+2025/3/30,1899,HUF,Spotify,Spotify monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/3/30,Mar-25
+2025/3/30,9359,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,RO,Budapest,Card,FALSE,2025/3/30,Mar-25
+2025/3/31,27847,HUF,Telekom,Telekom utilities purchase,Utilities,RO,Budapest,POS,FALSE,2025/3/31,Mar-25
+2025/3/31,3853,HUF,Taxi 6x6,Taxi 6x6 transport purchase,Transport,DE,Budapest,Card,FALSE,2025/3/31,Mar-25
+2025/4/1,195.36,EUR,MediaMarkt,MediaMarkt shopping purchase,Shopping,PL,Budapest,Card,TRUE,2025/4/1,Apr-25
+2025/4/3,57008,HUF,Ryanair,Ryanair travel purchase,Travel,DE,Budapest,Card,FALSE,2025/4/3,Apr-25
+2025/4/3,9.92,EUR,Adobe,Adobe monthly subscription auto-renewal,Education,HU,Budapest,Card,FALSE,2025/4/3,Apr-25
+2025/4/5,12664,HUF,Steam,Steam entertainment purchase,Entertainment,HU,Budapest,Online,FALSE,2025/4/5,Apr-25
+2025/4/6,20.62,EUR,Decathlon,Decathlon shopping purchase,Shopping,HU,Budapest,POS,FALSE,2025/4/6,Apr-25
+2025/4/9,13350,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,SK,Budapest,Card,FALSE,2025/4/9,Apr-25
+2025/4/9,5453,HUF,Steam,Steam entertainment purchase,Entertainment,AT,Budapest,Card,FALSE,2025/4/9,Apr-25
+2025/4/10,39727,HUF,Coursera,Coursera education purchase,Education,SK,Budapest,POS,FALSE,2025/4/10,Apr-25
+2025/4/11,22.92,EUR,McDonalds,McDonalds food purchase,Food,AT,Budapest,Online,FALSE,2025/4/11,Apr-25
+2025/4/12,43963,HUF,Vodafone,Vodafone utilities purchase,Utilities,PL,Budapest,Card,FALSE,2025/4/12,Apr-25
+2025/4/13,2475,HUF,BKK,BKK transport purchase,Transport,CZ,Budapest,Card,FALSE,2025/4/13,Apr-25
+2025/4/17,6.67,EUR,McDonalds,McDonalds food purchase,Food,SK,Budapest,Card,FALSE,2025/4/17,Apr-25
+2025/4/19,29730,HUF,Coursera,Coursera education purchase,Education,RO,Budapest,POS,FALSE,2025/4/19,Apr-25
+2025/4/20,13014,HUF,MediaMarkt,MediaMarkt shopping purchase,Shopping,HU,Budapest,Online,FALSE,2025/4/20,Apr-25
+2025/4/26,6927,HUF,Bolt,Bolt transport purchase,Transport,CZ,Budapest,POS,FALSE,2025/4/26,Apr-25
+2025/4/27,11207,HUF,Cinema City,Cinema City entertainment purchase,Entertainment,AT,Budapest,Card,FALSE,2025/4/27,Apr-25
+2025/4/28,3474,HUF,Netflix,Netflix monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/4/28,Apr-25
+2025/4/28,1818,HUF,Spotify,Spotify monthly subscription auto-renewal,Entertainment,HU,Budapest,Card,FALSE,2025/4/28,Apr-25
+2025/4/28,5889,HUF,McDonalds,McDonalds food purchase,Food,RO,Budapest,Online,FALSE,2025/4/28,Apr-25
+2025/5/2,9623,HUF,Foodpanda,Foodpanda food purchase,Food,AT,Budapest,POS,FALSE,2025/5/2,May-25
+2025/5/5,10.01,EUR,Adobe,Adobe monthly subscription auto-renewal,Education,HU,Budapest,Card,FALSE,2025/5/5,May-25
+2025/5/5,57432,HUF,E.ON,E.ON utilities purchase,Utilities,HU,Budapest,POS,FALSE,2025/5/5,May-25
+2025/5/7,7743,HUF,MOL Bubi,MOL Bubi transport purchase,Transport,RO,Budapest,POS,FALSE,2025/5/7,May-25
+2025/5/11,33118,HUF,Telekom,Telekom utilities purchase,Utilities,SK,Budapest,Card,FALSE,2025/5/11,May-25
+2025/5/15,6585,HUF,Bolt,Bolt transport purchase,Transport,RO,Budapest,Online,FALSE,2025/5/15,May-25
+2025/5/15,5786,HUF,Cinema City,Cinema City entertainment purchase,Entertainment,DE,Budapest,POS,FALSE,2025/5/15,May-25
+2025/5/16,4594,HUF,BKK,BKK transport purchase,Transport,DE,Budapest,Online,FALSE,2025/5/16,May-25
+2025/5/16,5900,HUF,Epic Games Store,Epic Games Store entertainment purchase,Entertainment,HU,Budapest,Card,FALSE,2025/5/16,May-25
+2025/5/17,9997,HUF,Wolt,Wolt food purchase,Food,CZ,Budapest,POS,FALSE,2025/5/17,May-25
+2025/5/17,18137,HUF,Steam,Steam entertainment purchase,Entertainment,CZ,Budapest,Card,FALSE,2025/5/17,May-25

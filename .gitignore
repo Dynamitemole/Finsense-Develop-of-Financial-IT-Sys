@@ -1,0 +1,18 @@
+# OS
+.DS_Store
+Thumbs.db
+$RECYCLE.BIN/
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Logs
+*.log
+
+node_modules/
+dist/
+.cache/
+.tmp/
+
+# Env
+.env
