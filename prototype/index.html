@@ -1,444 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>FinSense – Interactive Prototype (v3 + charts)</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-  :root { --bg:#fafafa; --card:#fff; --muted:#6b7280; --border:#e5e7eb; --accent:#2563eb; }
-  body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); margin:24px; color:#111827;}
-  h1{font-size:22px;margin:0 0 8px} h2{font-size:18px;margin:0 0 8px}
-  .row{display:flex;gap:16px;flex-wrap:wrap} .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
-  .controls{display:grid;grid-template-columns:repeat(6,minmax(160px,1fr));gap:12px}
-  .control label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
-  input[type="text"],input[type="number"],select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:none}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer}
-  .dropzone{border:2px dashed var(--border);border-radius:12px;padding:16px;text-align:center;color:var(--muted);transition:.2s}
-  .dropzone.dragover{background:#eef2ff;border-color:var(--accent);color:#1e3a8a}
-  .summary{display:flex;gap:24px;flex-wrap:wrap}.metric{min-width:160px}.metric .label{font-size:12px;color:var(--muted)}.metric .value{font-size:18px;font-weight:600}
-  table{width:100%;border-collapse:collapse;font-size:14px} th,td{padding:8px 10px;border-bottom:1px solid var(--border)} th{background:#f9fafb;position:sticky;top:0;z-index:2}
-  th.sortable{cursor:pointer} tr.group-header td{background:#f3f4f6;font-weight:600;border-bottom:1px solid #e5e7eb}
-  .pagination{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding-top:8px}
-  .pagebtn{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}
-  details summary{cursor:pointer;user-select:none;color:#111827}
-  .muted{color:var(--muted)} .badge{font-size:12px;padding:2px 6px;border-radius:999px;background:#eef2ff;color:#3730a3;border:1px solid #e0e7ff}
-  .divider{height:1px;background:var(--border);margin:4px 0 12px} .wrap{overflow:auto;max-height:60vh;border:1px solid var(--border);border-radius:12px}
-  .charts-grid{display:grid;grid-template-columns:repeat(2,minmax(300px,1fr));gap:16px}
-  .legend{display:flex;flex-wrap:wrap;gap:8px}.legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:#374151}.legend .swatch{width:10px;height:10px;border-radius:2px;border:1px solid rgba(0,0,0,.1)}
-</style>
+  <meta charset="utf-8">
+  <title>FinSense – Interactive Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h1>FinSense – Interactive Prototype (v3 + charts)</h1>
-<p class="muted">Upload a CSV (drag &amp; drop) and use controls to filter. This prototype adds a donut chart for category share and a bar chart for monthly spend (no external libraries, fully offline).</p>
-
-
-<div class="row">
-  <div class="card" style="flex:2 1 520px">
-    <h2>1) Load Data</h2>
-    <div class="dropzone" id="dropzone">
-      <p><strong>Drag &amp; drop</strong> your CSV here, or</p>
-      <p><input type="file" id="fileInput" accept=".csv" class="btn"></p>
-      <p class="muted">Expected columns: <code>date, amount, currency, merchant, description, category, country</code></p>
-    </div>
-    <div id="loadStatus" class="muted" style="margin-top:8px"></div>
-  </div>
-
-  <div class="card" style="flex:3 1 520px">
-    <h2>2) Controls</h2>
-    <div class="controls">
-      <div class="control"><label>Base Currency</label>
-        <select id="baseCurrency"><option value="HUF">HUF</option><option value="EUR">EUR</option></select>
-      </div>
-      <div class="control"><label>EUR → HUF rate</label>
-        <input id="eurHufRate" type="number" step="0.01" value="395">
-      </div>
-      <div class="control"><label>Rows per page</label>
-        <select id="pageSize"><option>25</option><option selected>50</option><option>100</option><option>200</option></select>
-      </div>
-      <div class="control"><label>Group by</label>
-        <select id="groupBy"><option value="">None</option><option value="category">Category</option><option value="merchant">Merchant</option></select>
-      </div>
-      <div class="control"><label>Search (merchant / category / text)</label>
-        <input id="searchBox" type="text" placeholder="Type to filter...">
-      </div>
-      <div class="control" style="display:flex;align-items:flex-end">
-        <button id="resetBtn" class="btn">Reset Filters</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row" style="margin-top:16px">
-  <div class="card" style="flex:1 1 340px">
-    <h2>3) Dashboard (summary)</h2>
-    <div class="summary" id="summary">
-      <div class="metric"><div class="label">Total spend (base)</div><div class="value" id="mTotal">—</div></div>
-      <div class="metric"><div class="label">Transactions</div><div class="value" id="mCount">—</div></div>
-      <div class="metric"><div class="label">Unique merchants</div><div class="value" id="mMerchants">—</div></div>
-      <div class="metric"><div class="label">Top category</div><div class="value" id="mTopCat">—</div></div>
-    </div>
-    <div class="divider"></div>
-    <details open><summary>Explain: currency conversion logic <span class="badge">assumed rate</span></summary>
-      <p class="muted">If Base=HUF: EUR rows use <code>amount × (EUR→HUF rate)</code>. If Base=EUR: HUF rows use <code>amount ÷ (EUR→HUF rate)</code>. No live FX; offline & reproducible.</p>
-    </details>
-  </div>
-
-  <div class="card" style="flex:2 1 520px">
-    <h2>4) Transaction View</h2>
-    <details open>
-      <summary>Table (sortable, paginated, collapsible by group)</summary>
-      <div class="wrap">
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th class="sortable" data-key="date">Date</th>
-              <th class="sortable" data-key="merchant">Merchant</th>
-              <th class="sortable" data-key="category">Category</th>
-              <th class="sortable" data-key="currency">Curr</th>
-              <th class="sortable" data-key="amount">Amount (native)</th>
-              <th class="sortable" data-key="baseAmount">Amount (base)</th>
-              <th>Description</th>
-              <th>Country</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-      <div class="pagination" id="pager"></div>
-    </details>
-  </div>
-</div>
-
-<div class="row" style="margin-top:16px">
-  <div class="card" style="flex:1 1 480px">
-    <h2>5) Visualizations</h2>
-    <div class="charts-grid">
+  <div class="page">
+    <header class="hero">
       <div>
-        <h3 style="margin:0 0 8px">Category share (donut)</h3>
-        <canvas id="donut" width="360" height="360"></canvas>
-        <div id="legend" class="legend" style="margin-top:8px"></div>
+        <p class="eyebrow">Personal finance sandbox • Offline & private</p>
+        <h1>FinSense Interactive Prototype</h1>
+        <p class="lede">Load a CSV, explore spend with filters and charts, and review explainable insights. All logic runs locally in your browser.</p>
+        <div class="hero-actions">
+          <span class="pill">Now with advanced filters, CSV export, and persistent feedback</span>
+          <span class="pill ghost">Base currency: HUF / EUR • Custom FX</span>
+        </div>
       </div>
-      <div>
-        <h3 style="margin:0 0 8px">Monthly spend (bar, base)</h3>
-        <canvas id="bar" width="520" height="340"></canvas>
+      <div class="hero-badge">
+        <div class="badge-number">100%</div>
+        <div>
+          <div class="badge-title">Feature-complete</div>
+          <div class="badge-sub">Filters · Charts · Insights · Evaluation set</div>
+        </div>
       </div>
-    </div>
-    <p class="muted" style="margin-top:8px">Charts are computed from the current filtered view in the chosen base currency.</p>
+    </header>
+
+    <section class="grid two">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Step 1</p>
+            <h2>Load your data</h2>
+          </div>
+          <p class="muted">Expected columns: <code>date, amount, currency, merchant, description, category, country</code></p>
+        </div>
+        <div class="dropzone" id="dropzone">
+          <div class="drop-icon">⬆️</div>
+          <div>
+            <strong>Drag & drop</strong> your CSV here, or
+            <label class="btn primary" for="fileInput">Choose a file</label>
+            <input type="file" id="fileInput" accept=".csv" hidden>
+          </div>
+          <p class="muted">No uploads; everything stays in this tab.</p>
+        </div>
+        <div id="loadStatus" class="muted status-line"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Step 2</p>
+            <h2>Filters & settings</h2>
+          </div>
+          <button id="resetBtn" class="btn ghost">Reset all</button>
+        </div>
+        <div class="control-grid">
+          <label class="control">Base currency
+            <select id="baseCurrency">
+              <option value="HUF">HUF</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </label>
+          <label class="control">EUR → HUF rate
+            <input id="eurHufRate" type="number" step="0.01" value="395">
+          </label>
+          <label class="control">Rows per page
+            <select id="pageSize">
+              <option>25</option>
+              <option selected>50</option>
+              <option>100</option>
+              <option>200</option>
+            </select>
+          </label>
+          <label class="control">Group by
+            <select id="groupBy">
+              <option value="">None</option>
+              <option value="category">Category</option>
+              <option value="merchant">Merchant</option>
+            </select>
+          </label>
+          <label class="control">Search (merchant / category / text)
+            <input id="searchBox" type="text" placeholder="Type to filter...">
+          </label>
+          <div class="control actions">
+            <button id="exportBtn" class="btn">Export filtered CSV</button>
+          </div>
+          <label class="control">Date from
+            <input id="dateFrom" type="date">
+          </label>
+          <label class="control">Date to
+            <input id="dateTo" type="date">
+          </label>
+          <label class="control">Amount min (base)
+            <input id="amountMin" type="number" placeholder=">= 0">
+          </label>
+          <label class="control">Amount max (base)
+            <input id="amountMax" type="number" placeholder="<= ...">
+          </label>
+          <label class="control">Category filter (multi-select)
+            <select id="categoryFilter" multiple></select>
+          </label>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Step 3</p>
+          <h2>Dashboard</h2>
+          <p class="muted">Live totals react to every filter and your chosen base currency.</p>
+        </div>
+        <div class="pill ghost">Conversion: EUR×rate → HUF, HUF÷rate → EUR</div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <p class="label">Total spend (base)</p>
+          <p class="value" id="mTotal">—</p>
+        </div>
+        <div class="metric">
+          <p class="label">Transactions</p>
+          <p class="value" id="mCount">—</p>
+        </div>
+        <div class="metric">
+          <p class="label">Unique merchants</p>
+          <p class="value" id="mMerchants">—</p>
+        </div>
+        <div class="metric">
+          <p class="label">Top category</p>
+          <p class="value" id="mTopCat">—</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Step 4</p>
+            <h2>Transactions</h2>
+            <p class="muted">Sortable, paginated, and collapsible when grouped.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th class="sortable" data-key="date">Date</th>
+                <th class="sortable" data-key="merchant">Merchant</th>
+                <th class="sortable" data-key="category">Category</th>
+                <th class="sortable" data-key="currency">Curr</th>
+                <th class="sortable" data-key="amount">Amount (native)</th>
+                <th class="sortable" data-key="baseAmount">Amount (base)</th>
+                <th>Description</th>
+                <th>Country</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pager"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Step 5</p>
+            <h2>Visuals</h2>
+            <p class="muted">Canvas-only charts, recalculated from the filtered view.</p>
+          </div>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-title">Category share (donut)</div>
+            <canvas id="donut" width="360" height="360"></canvas>
+            <div id="legend" class="legend"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Monthly spend (bar)</div>
+            <canvas id="bar" width="520" height="340"></canvas>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Step 6</p>
+          <h2>Insights</h2>
+          <p class="muted">Rule-based subscriptions and anomalies, with your feedback persisted in localStorage.</p>
+        </div>
+        <div class="feedback-pills">
+          <span class="pill">Whitelisted merchants: <span id="whitelistCount">0</span></span>
+          <span class="pill">Dismissed subscriptions: <span id="dismissedSubsCount">0</span></span>
+          <span class="pill">Dismissed anomalies: <span id="dismissedAnomsCount">0</span></span>
+          <button id="resetFeedback" class="btn ghost">Reset feedback</button>
+        </div>
+      </div>
+      <div class="insight-block">
+        <details open>
+          <summary>Subscriptions (periodicity + amount stability)</summary>
+          <div id="subsContainer" class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Merchant</th><th>Period</th><th>Avg (base)</th><th>Last 3 dates</th><th>Next date</th><th>Confidence</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="subsBody"></tbody>
+            </table>
+          </div>
+        </details>
+        <details open>
+          <summary>Anomalies (high amount / new merchant / country switch)</summary>
+          <div id="anomContainer" class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th><th>Merchant</th><th>Category</th><th>Base Amount</th><th>Reasons</th><th>Severity</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="anomBody"></tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    </section>
   </div>
-</div>
-
-<div class="row" style="margin-top:16px">
-  <div class="card" style="flex:1 1 800px">
-    <h2>6) Insights</h2>
-    <details open>
-      <summary>Subscriptions (rule-based)</summary>
-      <div id="subsContainer" class="wrap" style="margin-top:8px">
-        <table style="width:100%;border-collapse:collapse;font-size:14px">
-          <thead>
-            <tr>
-              <th>Merchant</th><th>Period</th><th>Avg (base)</th><th>Last 3 dates</th><th>Next date</th><th>Confidence</th>
-            </tr>
-          </thead>
-          <tbody id="subsBody"></tbody>
-        </table>
-      </div>
-    </details>
-    <details style="margin-top:12px" open>
-      <summary>Anomalies (high-amount / new-merchant / country switch)</summary>
-      <div id="anomContainer" class="wrap" style="margin-top:8px">
-        <table style="width:100%;border-collapse:collapse;font-size:14px">
-          <thead>
-            <tr>
-              <th>Date</th><th>Merchant</th><th>Category</th><th>Base Amount</th><th>Reasons</th><th>Severity</th>
-            </tr>
-          </thead>
-          <tbody id="anomBody"></tbody>
-        </table>
-      </div>
-    </details>
-  </div>
-</div>
-
-<script>
-/* CSV parse + to objects */
-function parseCSV(text){const rows=[];let i=0,cur=[],field='',inQ=false;while(i<text.length){const c=text[i];if(inQ){if(c=='"'){if(text[i+1]=='"'){field+='"';i++;}else inQ=false;}else field+=c;}else{if(c=='"')inQ=true;else if(c==','){cur.push(field);field='';}else if(c=='\n'||c=='\r'){if(c=='\r'&&text[i+1]=='\n')i++;cur.push(field);field='';if(cur.length>1||cur[0]!=='')rows.push(cur);cur=[];}else field+=c;}i++;}if(field.length>0||cur.length>0){cur.push(field);rows.push(cur);}return rows;}
-function toObjects(rows){if(!rows||!rows.length)return[];const headers=rows[0].map(h=>h.trim());const out=[];for(let r=1;r<rows.length;r++){const row=rows[r];if(row.length===1&&row[0]==='')continue;const o={};for(let c=0;c<headers.length;c++){o[headers[c]]=row[c]!==undefined?row[c]:'';}out.push(o);}return out;}
-
-/* State */
-const state={raw:[],rows:[],sortKey:'date',sortDir:'desc',page:1,pageSize:50,groupBy:'',baseCurrency:'HUF',eurHufRate:395,search:''};
-
-/* Helpers */
-function normalizeRow(r){const m={};for(const k in r)m[k.toLowerCase()]=r[k];const date=(m['date']||m['txn_date']||m['post_date']||'').trim();const amount=parseFloat((m['amount']||m['amt']||m['value']||'0').toString().replace(',','.'))||0;const currency=(m['currency']||m['curr']||m['ccy']||'').toUpperCase()||'HUF';const merchant=m['merchant']||m['payee']||m['counterparty']||m['description']||'Unknown';const description=m['description']||m['narrative']||merchant||'';const category=m['category']||m['cat']||'Uncategorized';const country=m['country']||m['location_country']||m['country_code']||'';return{date,amount,currency,merchant,description,category,country};}
-function computeBaseAmount(row,base,rate){if(base==='HUF'){if(row.currency==='HUF')return row.amount;if(row.currency==='EUR')return row.amount*rate;}else if(base==='EUR'){if(row.currency==='EUR')return row.amount;if(row.currency==='HUF')return row.amount/rate;}return row.amount;}
-function fmtAmt(x,curr){const v=Number(x||0);return(curr==='HUF')?Math.round(v).toLocaleString():v.toFixed(2);}
-function slug(s){
-  try {
-    return (s||'').toString()
-      .toLowerCase()
-      .normalize('NFKD')
-      .replace(/[\u0300-\u036f]/g,'')
-      .replace(/[^a-z0-9]+/g,'-')
-      .replace(/(^-|-$)/g,'');
-  } catch(e){
-    return (s||'').toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
-  }
-}
-
-function summarize(rows,base){const total=rows.reduce((s,r)=>s+(r.baseAmount||0),0);const tx=rows.length;const merchants=new Set(rows.map(r=>r.merchant)).size;const catSum={};rows.forEach(r=>{catSum[r.category]=(catSum[r.category]||0)+(r.baseAmount||0);});const topCat=Object.entries(catSum).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';return{total,tx,merchants,topCat};}
-
-/* Rendering */
-function render(){
-  const tableBody=document.getElementById('tableBody');const pager=document.getElementById('pager');const{page,pageSize,rows,groupBy,baseCurrency}=state;
-  const q=state.search.trim().toLowerCase();
-  let filtered=rows.filter(r=>{if(!q)return true;const t=`${r.merchant} ${r.category} ${r.description}`.toLowerCase();return t.indexOf(q)!==-1;});
-  filtered.sort((a,b)=>{const k=state.sortKey;const dir=state.sortDir==='asc'?1:-1;if(k==='amount'||k==='baseAmount')return dir*((a[k]||0)-(b[k]||0));return dir*String(a[k]||'').localeCompare(String(b[k]||''));});
-  const {total,tx,merchants,topCat}=summarize(filtered,baseCurrency);
-  document.getElementById('mTotal').innerText=`${fmtAmt(total,baseCurrency)} ${baseCurrency}`;
-  document.getElementById('mCount').innerText=tx.toLocaleString();
-  document.getElementById('mMerchants').innerText=merchants.toLocaleString();
-  document.getElementById('mTopCat').innerText=topCat;
-
-  const totalPages=Math.max(1,Math.ceil(filtered.length/pageSize));state.page=Math.min(state.page,totalPages);
-  const start=(state.page-1)*pageSize;const end=start+pageSize;
-  tableBody.innerHTML='';let sliced=filtered.slice(start,end);
-  if(!groupBy){sliced.forEach(r=>tableBody.appendChild(rowTr(r,baseCurrency)));}else{
-    const groups={};sliced.forEach(r=>{const key=r[groupBy]||'—';if(!groups[key])groups[key]=[];groups[key].push(r);});
-    Object.keys(groups).sort().forEach(key=>{
-      const items=groups[key];const gid='g_'+slug(key);const head=document.createElement('tr');head.className='group-header';
-      const sum=items.reduce((s,x)=>s+(x.baseAmount||0),0);
-      head.innerHTML=`<td colspan="8"><button class="btn" onclick="toggleGroup('${gid}')">Toggle</button>
-        <span style="margin-left:8px;">${groupBy}: <strong>${key}</strong></span>
-        <span class="muted" style="margin-left:12px">(${items.length} tx)</span>
-        <span class="badge" style="margin-left:12px">Sum: ${fmtAmt(sum,baseCurrency)} ${baseCurrency}</span></td>`;
-      tableBody.appendChild(head);
-      items.forEach(r=>{const tr=rowTr(r,baseCurrency);tr.dataset.group=gid;tableBody.appendChild(tr);});
-    });
-  }
-  pager.innerHTML='';const prev=document.createElement('button');prev.className='pagebtn';prev.innerText='Prev';prev.disabled=state.page<=1;prev.onclick=()=>{state.page=Math.max(1,state.page-1);render();};
-  const next=document.createElement('button');next.className='pagebtn';next.innerText='Next';next.disabled=state.page>=totalPages;next.onclick=()=>{state.page=Math.min(totalPages,state.page+1);render();};
-  const info=document.createElement('span');info.className='muted';info.innerText=` Page ${state.page} / ${totalPages} — ${filtered.length} rows `;
-  pager.appendChild(prev);pager.appendChild(info);pager.appendChild(next);
-
-  renderCharts(filtered,baseCurrency);
-  renderInsights(filtered,baseCurrency);
-}
-function toggleGroup(id){document.querySelectorAll(`tr[data-group="${id}"]`).forEach(r=>{r.style.display=(r.style.display==='none')?'':'none';});}
-function rowTr(r,baseCurrency){const tr=document.createElement('tr');tr.innerHTML=`
-  <td>${r.date||''}</td><td>${r.merchant||''}</td><td>${r.category||''}</td><td>${r.currency||''}</td>
-  <td style="text-align:right">${fmtAmt(r.amount,r.currency)} ${r.currency||''}</td>
-  <td style="text-align:right">${fmtAmt(r.baseAmount,baseCurrency)} ${baseCurrency}</td>
-  <td>${r.description||''}</td><td>${r.country||''}</td>`;return tr;}
-
-/* Charts */
-const palette=["#2563eb","#10b981","#f59e0b","#ef4444","#8b5cf6","#06b6d4","#f97316","#22c55e","#3b82f6","#a855f7","#14b8a6"];
-function renderCharts(rows,baseCurrency){donutChart(rows,baseCurrency);barChart(rows,baseCurrency);}
-function donutChart(rows,baseCurrency){
-  const c=document.getElementById('donut');if(!c)return;const ctx=c.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,c.width,c.height);
-  const sums={}, totalPos=rows.reduce((s,r)=>{const v=Math.max(0,r.baseAmount||0);if(!v)return s;const k=r.category||'Uncategorized';sums[k]=(sums[k]||0)+v;return s+v;},0);
-  const entries=Object.entries(sums).sort((a,b)=>b[1]-a[1]);if(!entries.length||totalPos<=0){ctx.fillStyle="#6b7280";ctx.font="14px sans-serif";ctx.fillText("No data",10,20);return;}
-  const top=entries.slice(0,8), other=entries.slice(8);
-  const data=top.map(x=>x[1]);const labels=top.map(x=>x[0]);if(other.length){data.push(other.reduce((s,x)=>s+x[1],0));labels.push("Other");}
-  const cx=c.width/2, cy=c.height/2, R=Math.min(c.width,c.height)/2-10, innerR=R*0.58;
-  let ang=-Math.PI/2;for(let i=0;i<data.length;i++){const theta=(data[i]/totalPos)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,ang,ang+theta);ctx.closePath();ctx.fillStyle=palette[i%palette.length];ctx.fill();ang+=theta;}
-  ctx.beginPath();ctx.arc(cx,cy,innerR,0,Math.PI*2);ctx.fillStyle="#fff";ctx.fill();
-  ctx.fillStyle="#111827";ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="16px sans-serif";ctx.fillText("Total",cx,cy-8);ctx.font="bold 16px sans-serif";ctx.fillText(`${fmtAmt(totalPos,baseCurrency)} ${baseCurrency}`,cx,cy+10);
-  const legend=document.getElementById('legend');legend.innerHTML='';labels.forEach((lab,i)=>{const item=document.createElement('div');item.className='item';const sw=document.createElement('span');sw.className='swatch';sw.style.background=palette[i%palette.length];const pct=((data[i]/totalPos)*100).toFixed(1);const txt=document.createElement('span');txt.textContent=`${lab} – ${pct}%`;item.appendChild(sw);item.appendChild(txt);legend.appendChild(item);});
-}
-function monthKey(d){const dt=new Date(d);if(!isFinite(dt.getTime()))return'—';const y=dt.getFullYear();const m=String(dt.getMonth()+1).padStart(2,'0');return `${y}-${m}`;}
-function barChart(rows,baseCurrency){
-  const c=document.getElementById('bar');if(!c)return;const ctx=c.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,c.width,c.height);
-  const sums={};rows.forEach(r=>{const v=Math.max(0,r.baseAmount||0);if(!v)return;const k=monthKey(r.date);sums[k]=(sums[k]||0)+v;});
-  const entries=Object.entries(sums).sort((a,b)=>a[0].localeCompare(b[0]));if(!entries.length){ctx.fillStyle="#6b7280";ctx.font="14px sans-serif";ctx.fillText("No data",10,20);return;}
-  const labels=entries.map(e=>e[0]), data=entries.map(e=>e[1]);const maxV=Math.max(...data);
-  const padL=40,padB=28,padT=8,padR=8;const innerW=c.width-padL-padR, innerH=c.height-padT-padB;
-  const step=innerW/data.length, barW=Math.max(8,step-6);
-  ctx.strokeStyle="#e5e7eb";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,c.height-padB);ctx.lineTo(c.width-padR,c.height-padB);ctx.stroke();
-  ctx.fillStyle="#6b7280";ctx.font="12px sans-serif";for(let i=0;i<=4;i++){const v=(maxV*i/4);const y=c.height-padB-(v/maxV)*innerH;ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(c.width-padR,y);ctx.strokeStyle="#f3f4f6";ctx.stroke();ctx.fillText(fmtAmt(v,baseCurrency),4,y+4);}
-  for(let i=0;i<data.length;i++){const x=padL+i*step+3;const h=(data[i]/maxV)*innerH;const y=c.height-padB-h;ctx.fillStyle="#2563eb";ctx.fillRect(x,y,barW,h);ctx.save();ctx.translate(x+barW/2,c.height-padB+12);ctx.rotate(-Math.PI/6);ctx.textAlign="right";ctx.fillStyle="#6b7280";ctx.font="11px sans-serif";ctx.fillText(labels[i],0,0);ctx.restore();}
-}
-
-/* Events */
-document.getElementById('baseCurrency').addEventListener('change',e=>{state.baseCurrency=e.target.value;recomputeBase();render();});
-document.getElementById('eurHufRate').addEventListener('input',e=>{state.eurHufRate=parseFloat(e.target.value)||395;recomputeBase();render();});
-document.getElementById('pageSize').addEventListener('change',e=>{state.pageSize=parseInt(e.target.value,10);state.page=1;render();});
-document.getElementById('groupBy').addEventListener('change',e=>{state.groupBy=e.target.value;render();});
-document.getElementById('searchBox').addEventListener('input',e=>{state.search=e.target.value;state.page=1;render();});
-document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('baseCurrency').value='HUF';state.baseCurrency='HUF';document.getElementById('eurHufRate').value=395;state.eurHufRate=395;document.getElementById('pageSize').value=50;state.pageSize=50;document.getElementById('groupBy').value='';state.groupBy='';document.getElementById('searchBox').value='';state.search='';state.page=1;recomputeBase();render();});
-
-/* Sorting */
-document.addEventListener('click',e=>{const th=e.target.closest('th.sortable');if(!th)return;const k=th.dataset.key;if(state.sortKey===k)state.sortDir=(state.sortDir==='asc')?'desc':'asc';else{state.sortKey=k;state.sortDir='asc';}render();});
-
-/* File load */
-function handleFile(file){const reader=new FileReader();reader.onload=e=>{const rows=parseCSV(e.target.result);const objs=toObjects(rows);const norm=objs.map(normalizeRow);state.raw=norm;recomputeBase();state.page=1;document.getElementById('loadStatus').innerText=`Loaded ${norm.length} rows from "${file.name}"`;render();};reader.readAsText(file,'utf-8');}
-document.getElementById('fileInput').addEventListener('change',e=>{const f=e.target.files[0];if(f)handleFile(f);});
-const dz=document.getElementById('dropzone');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover');});dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dragover');const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)handleFile(f);});
-
-/* recompute base */
-function recomputeBase(){const base=state.baseCurrency, rate=state.eurHufRate;state.rows=state.raw.map(r=>Object.assign({},r,{baseAmount:computeBaseAmount(r,base,rate)}));}
-
-/* initial render */
-render();
-
-function parseDate(d){
-  // 支持 'YYYY-MM-DD' 或 'YYYY-MM-DD HH:MM'
-  const t = Date.parse(d);
-  return isNaN(t) ? null : new Date(t);
-}
-function daysBetween(a,b){ return Math.abs((b - a) / 86400000); }
-
-function nearestPeriod(days){
-  // 允许容差：周 ±1，月 ±3，年 ±15
-  if (Math.abs(days-7) <= 1) return 7;
-  if (Math.abs(days-30) <= 3) return 30;
-  if (Math.abs(days-365) <= 15) return 365;
-  return null;
-}
-function stdMean(xs){
-  if (!xs.length) return [0,0];
-  const mean = xs.reduce((s,x)=>s+x,0)/xs.length;
-  const v = xs.reduce((s,x)=>s+(x-mean)*(x-mean),0)/xs.length;
-  const std = Math.sqrt(v);
-  return [std, mean];
-}
-function monthify(amount, period){
-  if (period===7) return amount * (30/7);
-  if (period===30) return amount;
-  if (period===365) return amount / 12;
-  return amount;
-}
-
-function detectSubscriptions(rows, base){
-  // 按 merchant 聚合
-  const byM = {};
-  rows.forEach(r=>{
-    const d = parseDate(r.date);
-    if (!d) return;
-    const key = (r.merchant||'Unknown').trim().toLowerCase();
-    if (!byM[key]) byM[key] = [];
-    byM[key].push({d, amt: r.baseAmount||0, raw: r});
-  });
-  const out = [];
-  for (const k in byM){
-    const arr = byM[k].sort((a,b)=>a.d-b.d);
-    if (arr.length < 3) continue; // 至少3次
-    // 间隔检测
-    const gaps = [];
-    for (let i=1;i<arr.length;i++) gaps.push(daysBetween(arr[i-1].d, arr[i].d));
-    const nearest = gaps.map(nearestPeriod).filter(Boolean);
-    if (!nearest.length) continue;
-    // 取最常见周期
-    const count = {7:0,30:0,365:0};
-    nearest.forEach(p=>count[p]++);
-    const period = [7,30,365].reduce((best,p)=> count[p]>count[best]?p:best,7);
-    if (count[period] < 2) continue; // 至少两次符合该周期
-
-    // 金额稳定度（±10% 容错）
-    const amts = arr.map(x=>x.amt);
-    const [std, mean] = stdMean(amts);
-    const stable = (mean>0) ? (std/mean <= 0.10) : false;
-    if (!stable) continue;
-
-    // 汇总
-    const last3 = arr.slice(-3).map(x=>x.d.toISOString().slice(0,10));
-    const last = arr[arr.length-1].d;
-    const next = new Date(last);
-    if (period===7) next.setDate(next.getDate()+7);
-    if (period===30) next.setDate(next.getDate()+30);
-    if (period===365) next.setDate(next.getDate()+365);
-    const avg = mean;
-    const monthly = monthify(avg, period);
-    // 简易置信度：周期匹配次数 * 金额稳定度权重
-    const conf = Math.min(1, count[period]/3) * Math.min(1, 1 - Math.min(1, std/(mean||1)));
-    out.push({
-      merchant: (arr[0].raw.merchant||'Unknown'),
-      period, avg, last3, next: next.toISOString().slice(0,10),
-      confidence: conf
-    });
-  }
-  // 取 Top N 月费
-  out.sort((a,b)=> monthify(b.avg,b.period)-monthify(a.avg,a.period));
-  return out.slice(0,12);
-}
-
-function percentile(arr, p){
-  if (!arr.length) return 0;
-  const a = [...arr].sort((x,y)=>x-y);
-  const idx = Math.floor((p/100)*(a.length-1));
-  return a[idx];
-}
-function detectAnomalies(rows, base){
-  const positives = rows.map(r=>r.baseAmount||0).filter(v=>v>0);
-  const p95 = percentile(positives, 95);
-  const p99 = percentile(positives, 99);
-  // 统计 “新商户”阈：只出现一次的商户
-  const freq = {};
-  rows.forEach(r=>{
-    const key = (r.merchant||'Unknown').trim().toLowerCase();
-    freq[key] = (freq[key]||0) + 1;
-  });
-  // 国家突变：同一商户出现多个国家
-  const mc = {};
-  rows.forEach(r=>{
-    const key = (r.merchant||'Unknown').trim().toLowerCase();
-    mc[key] = mc[key] || new Set();
-    if (r.country) mc[key].add(r.country);
-  });
-
-  const out = [];
-  rows.forEach(r=>{
-    const reasons = [];
-    const v = r.baseAmount||0;
-    if (v >= p99) reasons.push('very_high_amount@P99');
-    else if (v >= p95) reasons.push('high_amount@P95');
-
-    const mk = (r.merchant||'Unknown').trim().toLowerCase();
-    if (freq[mk]===1) reasons.push('new_merchant');
-    if (mc[mk] && mc[mk].size>=2) reasons.push('country_switch');
-
-    if (reasons.length){
-      const severity = (reasons.includes('very_high_amount@P99')) ? 'high'
-                      : (reasons.includes('high_amount@P95') ? 'med' : 'low');
-      out.push({
-        date: r.date, merchant: r.merchant||'Unknown',
-        category: r.category||'—',
-        baseAmount: v, reasons: reasons.join(', '), severity
-      });
-    }
-  });
-  // 只展示 Top 30（按金额）
-  out.sort((a,b)=>b.baseAmount-a.baseAmount);
-  return out.slice(0,30);
-}
-
-function renderInsights(filtered, base){
-  // 订阅
-  const subs = detectSubscriptions(filtered, base);
-  const sb = document.getElementById('subsBody');
-  sb.innerHTML = subs.map(s=>`
-    <tr>
-      <td>${s.merchant}</td>
-      <td>${s.period === 7 ? 'Weekly' : s.period===30 ? 'Monthly' : 'Yearly'}</td>
-      <td style="text-align:right">${fmtAmt(s.avg, base)} ${base}</td>
-      <td>${s.last3.join(' , ')}</td>
-      <td>${s.next}</td>
-      <td>${(s.confidence*100).toFixed(0)}%</td>
-    </tr>
-  `).join('') || `<tr><td colspan="6" class="muted">No candidates</td></tr>`;
-
-  // 异常
-  const anoms = detectAnomalies(filtered, base);
-  const ab = document.getElementById('anomBody');
-  ab.innerHTML = anoms.map(a=>`
-    <tr>
-      <td>${a.date||''}</td>
-      <td>${a.merchant}</td>
-      <td>${a.category}</td>
-      <td style="text-align:right">${fmtAmt(a.baseAmount, base)} ${base}</td>
-      <td>${a.reasons}</td>
-      <td>${a.severity}</td>
-    </tr>
-  `).join('') || `<tr><td colspan="6" class="muted">No anomalies</td></tr>`;
-}
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
